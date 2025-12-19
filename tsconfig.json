@@ -1,5 +1,41 @@
+/* Introducción:
+- Astro incluye compatibilidad integrada con TypeScript. Se puede importar archivos .tsy .tsx en tu proyecto Astro, escribir código TypeScript directamente en tu componente Astro e incluso usar un archivo astro.config.ts para tu configuración Astro si lo deseas.
+- No necesitas escribir código TypeScript en tus proyectos Astro para aprovecharlo. Astro siempre trata el código de tus componentes como TypeScript, y la extensión Astro VS Code inferirá todo lo posible para proporcionar autocompletado, sugerencias y errores en tu editor.
+*/
+/* Configuración:
+- Los proyectos de inicio de Astro incluyen un archivo tsconfig.json en su proyecto. Incluso si no escribe código TypeScript, este archivo es importante para que herramientas como Astro y VS Code puedan comprender su proyecto. Algunas funciones (como la importación de paquetes npm) no son totalmente compatibles con el editor sin un archivo tsconfig.json. Si instala Astro manualmente, asegúrese de crear este archivo usted mismo.
+*/
 {
   "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  // Aprovechar los tipos de Astro
+  "include": [
+    ".astro/types.d.ts",
+    "**/*"
+  ],
+  // Evitar verificar los archivos compilados
+  "exclude": [
+    "dist"
+  ],
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "plugins": [
+      {
+        "name": "@astrojs/ts-plugin",
+      },
+    ],
+    // TypeScript revisará tus importaciones y te indicará cuándo usar "import type"
+    "verbatimModuleSyntax": true,
+    // Alias ​​de importación
+    "paths": {
+      "@components/*": [
+        "components/*"
+      ],
+      "@layouts/*": [
+        "layouts/*"
+      ],
+      "@utils/*": [
+        "utils/*"
+      ]
+    }
+  }
 }

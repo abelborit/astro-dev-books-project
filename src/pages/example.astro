@@ -1,0 +1,8 @@
+---
+import { default as Greeting } from "@components/Example-component.astro";
+import { default as ShowNumber } from "@components/Example-component-ts.astro";
+import { double } from "@utils/example-utils";
+---
+
+<Greeting name="Astro" from="Local" />
+<ShowNumber number={double(2)} info="Es doble de 2" />
