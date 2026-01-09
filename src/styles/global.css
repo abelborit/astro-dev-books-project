@@ -1,0 +1,23 @@
+/* los estilos de tailwind se están pasando a global.css porque Tailwind CSS no procesa las utilidades (@apply p-20;) dentro de bloques <style> en archivos .astro por defecto, ya que Tailwind solo analiza archivos CSS estándar (como global.css). De esta forma Tailwind procesará correctamente las utilidades */
+
+@import "tailwindcss";
+
+html {
+  font-family: system-ui, sans-serif;
+  background: #13151a;
+  color: #fff;
+}
+
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  @apply grid place-content-center p-20;
+}
+
+body > div {
+  @apply container;
+}
