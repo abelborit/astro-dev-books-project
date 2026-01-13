@@ -1,3 +1,7 @@
+---
+import "../styles/global.css";
+---
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -9,15 +13,9 @@
   </head>
 
   <body>
-    <slot />
+    <div>
+      <!-- en "<slot />" se renderizan cada una de nuestras páginas -->
+      <slot />
+    </div>
   </body>
 </html>
-
-<style>
-  html,
-  body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-  }
-</style>
