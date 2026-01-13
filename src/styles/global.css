@@ -1,6 +1,7 @@
 /* los estilos de tailwind se están pasando a global.css porque Tailwind CSS no procesa las utilidades (@apply p-20;) dentro de bloques <style> en archivos .astro por defecto, ya que Tailwind solo analiza archivos CSS estándar (como global.css). De esta forma Tailwind procesará correctamente las utilidades */
 
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 html {
   font-family: system-ui, sans-serif;
