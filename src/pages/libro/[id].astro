@@ -1,0 +1,71 @@
+---
+import Layout from "@layouts/Layout.astro";
+import { getCollection, render } from "astro:content";
+import { formatDateUTC } from "@utils/formatDateUTC";
+
+export async function getStaticPaths() {
+  const booksCollection = await getCollection("books");
+
+  /* se tiene que retornar un arreglo con la información que queremos que tenga cada ruta, en este caso, dentro de los parámetros (params) está el id que sería el slug de cada libro y dentro de las propiedades que se recibe (props) está la información del libro como tal */
+  return booksCollection.map((book) => {
+    return {
+      params: { id: book.slug },
+      props: { book },
+    };
+  });
+}
+
+/* aquí se pueden usar las variables desestructuradas que vienen de las props */
+const { book } = Astro.props;
+const { data, slug } = book;
+const { title, author, img, readtime, description, buy, pubDate } = data;
+
+const pubDateFormatted = formatDateUTC(pubDate);
+
+/* para renderizar el contenido de la colección, en este caso de los archivos markdown, podemos usar el método "render" de Astro */
+const { Content } = await render(book);
+---
+
+<Layout>
+  <div class="flex flex-col gap-4">
+    <a href="/" class="hover:underline opacity-70">← Volver atrás</a>
+
+    <div class="flex gap-12">
+      <aside class="flex flex-col items-center gap-4">
+        <img
+          transition:name={`img-${slug}`}
+          class="rounded w-72 h-auto"
+          src={`/${img}`}
+          alt={title}
+        />
+      </aside>
+
+      <main class="max-w-3xl flex flex-col gap-3">
+        <h1 transition:name={`title-${slug}`} class="text-4xl font-bold">
+          {title}
+        </h1>
+
+        <div class="flex flex-col gap-0.5 border-b border-gray-700 pb-2 mb-2">
+          <p class="text-sm text-gray-400 italic">
+            <strong>Author:</strong>
+            {author}
+          </p>
+
+          <p class="text-sm text-gray-400 italic">
+            <strong>Description:</strong>
+            {description}
+          </p>
+
+          <p class="text-sm text-gray-400 italic">
+            <strong>Published Year:</strong>
+            {pubDateFormatted}
+          </p>
+        </div>
+
+        <div class="prose prose-invert">
+          <Content />
+        </div>
+      </main>
+    </div>
+  </div>
+</Layout>

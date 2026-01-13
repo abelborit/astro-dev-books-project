@@ -1,4 +1,5 @@
 ---
+import { formatDateUTC } from "@utils/formatDateUTC";
 import Layout from "../layouts/Layout.astro";
 // leer la colección que estamos creando
 import { getCollection } from "astro:content";
@@ -27,17 +28,9 @@ const booksCollection = (await getCollection("books")).sort(
           {
             booksCollection.map((book) => {
               const { data, slug } = book;
-              const {
-                author,
-                buy,
-                description,
-                img,
-                readtime,
-                title,
-                pubDate,
-              } = data;
-              /* se está usando "getUTCDate()" - "getUTCMonth()" - "getUTCFullYear()" para obtener la fecha real del Markdown porque usar los métodos "getDate()" - "getMonth()" - "getFullYear()" de JavaScript usan la fecha en la zona horaria local del servidor, pero Astro parsea las fechas en UTC (por ejemplo, 2024-04-22T00:00:00.000Z es medianoche UTC). Si tu zona horaria está detrás de UTC (por ejemplo, UTC-6), el método "getDate()" puede devolver el día anterior */
-              const pubDateFormatted = `${pubDate.getUTCDate().toString().padStart(2, "0")}/${(pubDate.getUTCMonth() + 1).toString().padStart(2, "0")}/${pubDate.getUTCFullYear()}`;
+              const { author, description, img, readtime, title, pubDate } =
+                data;
+              const pubDateFormatted = formatDateUTC(pubDate);
 
               return (
                 <article class="flex gap-3 border-2 border-gray-400 rounded-xl p-6 relative h-64 transition-transform hover:scale-95">
