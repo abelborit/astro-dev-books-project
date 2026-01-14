@@ -1,5 +1,9 @@
 ---
 import "../styles/global.css";
+
+/* https://docs.astro.build/en/guides/view-transitions/ */
+/* Astro creará animaciones de página predeterminadas basadas en las similitudes entre la página anterior y la nueva, y también ofrecerá un comportamiento alternativo para navegadores no compatibles. Es una forma de transportar elementos HTML de la página actual a la siguiente durante la navegación */
+import { ClientRouter } from "astro:transitions";
 ---
 
 <!doctype html>
@@ -10,6 +14,9 @@ import "../styles/global.css";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>Astro Basics</title>
+
+    <!-- Al usar <ClientRouter /> en una página, la precarga (prefetch) también se activará de forma predeterminada. Se puede personalizar la configuración de precarga "astro.config.mjs" para anular la config predeterminada -->
+    <ClientRouter />
   </head>
 
   <body>

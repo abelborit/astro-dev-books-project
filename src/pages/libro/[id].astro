@@ -32,6 +32,7 @@ const { Content } = await render(book);
 
     <div class="flex gap-12">
       <aside class="flex flex-col items-center gap-4">
+        <!-- se está agregando una transición personalizada con el -- transition:name={`img-${slug}`} -- entre dos elementos de páginas diferentes para que al hacer la navegación pueda tener una transición fluida -->
         <img
           transition:name={`img-${slug}`}
           class="rounded w-72 h-auto"
@@ -41,6 +42,7 @@ const { Content } = await render(book);
       </aside>
 
       <main class="max-w-3xl flex flex-col gap-3">
+        <!-- se está agregando una transición personalizada con el -- transition:name={`title-${slug}`} -- entre dos elementos de páginas diferentes para que al hacer la navegación pueda tener una transición fluida -->
         <h1 transition:name={`title-${slug}`} class="text-4xl font-bold">
           {title}
         </h1>
