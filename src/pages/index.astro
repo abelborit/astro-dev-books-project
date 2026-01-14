@@ -7,6 +7,7 @@ import { getCollection } from "astro:content";
 // Get all entries from a collection.
 // Requires the name of the collection as an argument.
 // NOTA: si ya cambiamos y ajustamos el nombre correctamente en "content.config.ts" pero sigue apareciendo error de que no encuentra la colección, puede ser que se haya quedado algo en caché, entonces tenemos que apagar la terminal, luego correr "rm -rf .astro" o solo eliminar el folder ".astro" y luego volver a correr "npm run dev" para que se regenere todo
+// NOTA: lo que también se puede intentar es correr en la terminal "npx astro sync" para que sincronice todo nuevamente "https://docs.astro.build/en/reference/cli-reference/"
 
 // const booksCollection = await getCollection("books");
 // console.log({ booksCollection });
