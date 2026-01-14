@@ -43,6 +43,11 @@ const { Content } = await render(book);
           alt={title}
         />
 
+        <!-- si no se le coloca un texto por default, en este caso algo como "Cargando puntuación..." y lo dejamos vacío, veremos que da un salto porque eso recién lo carga en el cliente pero para evitar eso, se podría usar algo de Astro que son las "islas de servidor" o las "server islands" que son componentes que se renderizan en el servidor y que cuando están listos recién los devuelve al cliente, pero ya devuelve lo que renderiza, no hace el fetching de datos en el cliente. Esto sería algo similar a los react server components pero ahora es mucho más simple y facil de comprender -->
+        <span class="text-sm text-gray-400 italic" id="score">
+          Cargando puntuación...
+        </span>
+
         {
           SHOW_BUY_BUTTON && (
             <a
@@ -89,3 +94,29 @@ const { Content } = await render(book);
     </div>
   </div>
 </Layout>
+
+<!-- algo bueno de Astro es que se pueden colocar estilos y scripts dentro de cada archivo o componente y solo tiene que afectar en donde se coloquen, a no ser que se coloque que sea un estilo global, por ejemplo -->
+
+<!-- estilo global -->
+<!-- <style is:global></style> -->
+
+<!-- estilo local -->
+<!-- <style></style> -->
+
+<!-- script en línea -->
+<!-- <script is:inline></script> -->
+
+<!-- script normales donde por ejemplo se pueden importar dependencias, hacer fetching de datos, configuraciones adicionales de Astro, leer variables de entorno en el cliente, agregar interactividad con cierta funcionalidad a un elemento, etc -->
+<script>
+  import { SCORE_API_ENDPOINT } from "astro:env/client";
+
+  const scoreElement = document.getElementById("score");
+
+  fetch(SCORE_API_ENDPOINT)
+    .then((response) => response.text())
+    .then((scoreValue) => {
+      if (scoreElement) {
+        scoreElement.innerHTML = `Puntuación: ${scoreValue.trim()}/5 ⭐`;
+      }
+    });
+</script>
