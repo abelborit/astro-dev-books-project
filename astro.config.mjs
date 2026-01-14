@@ -12,6 +12,12 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 
 // https://astro.build/config
 export default defineConfig({
+  /* https://docs.astro.build/en/guides/prefetch/ */
+  // prefetch: true,
+  prefetch: {
+    defaultStrategy: "hover", // "hover" (default) | "tap" | "viewport" | "load"
+    // prefetchAll: true // Opción para prefetch de todos los enlaces (carga más lenta inicial)
+  },
   /* Si usas los alias en imports de Astro, agrega la configuración en "astro.config.mjs" pero hay que proporcionar opciones de configuración adicionales a Vite. Útil cuando Astro no admite alguna configuración avanzada que puedas necesitar. */
   /* https://vite.dev/config/ */
   vite: {

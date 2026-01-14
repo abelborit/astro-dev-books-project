@@ -35,6 +35,8 @@ const booksCollection = (await getCollection("books")).sort(
               return (
                 <article class="flex gap-3 border-2 border-gray-400 rounded-xl p-6 relative h-64 transition-transform hover:scale-95">
                   <a
+                    /* data-astro-prefetch="load" */
+                    data-astro-prefetch
                     href={`/libro/${slug}`}
                     class="xl:mb-0 transition flex justify-start gap-5"
                   >
