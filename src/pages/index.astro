@@ -15,6 +15,10 @@ import { getCollection } from "astro:content";
 const booksCollection = (await getCollection("books")).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
+
+/* esto es una directiva en frameworks como Astro para indicar que una página debe ser generada estáticamente durante la compilación (pre-renderizada) en lugar de renderizarse en el servidor o el cliente bajo demanda, optimizando la velocidad al servir archivos HTML pre-construidos, ideal para contenido que no cambia frecuentemente */
+/* Al poner esta directiva le dices al constructor que construya esa página como HTML estático incluso si tu proyecto está configurado para renderizado en el servidor por defecto como lo tenemos en el "astro.config.mjs" en -- output: "server", -- */
+export const prerender = true
 ---
 
 <Layout>

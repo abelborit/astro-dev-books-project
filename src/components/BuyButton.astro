@@ -1,0 +1,25 @@
+---
+import AmazonLogo from "./AmazonLogo.astro";
+
+const SPAIN = "ES";
+
+/* si desplegamos la aplicación en Vercel, entonces dentro de los headers se puede recuperar de dónde es el país del que se está entrando a la página para saber de dónde es el usuario o dónde está ubicado al momento de ingresar a la página */
+const country = Astro.request.headers.get("X-Vercel-IP-Country") ?? "ES";
+
+const storeCountry = country === SPAIN ? "spain" : "usa";
+const countryName = country === SPAIN ? "España" : "Estados Unidos";
+
+const { buy } = Astro.props;
+const urlToRedirect = buy[storeCountry];
+---
+
+<a
+  href={urlToRedirect}
+  title="Comprar libro"
+  target="_blank"
+  rel="noopener noreferrer"
+  class="text-balance inline-flex gap-2 items-center bg-yellow-400 hover:bg-yellow-500 active:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg border border-yellow-500 transition duration-200 ease-in-out hover:scale-105 justify-center text-center"
+>
+  Comprar en Amazon {countryName}
+  <AmazonLogo />
+</a>

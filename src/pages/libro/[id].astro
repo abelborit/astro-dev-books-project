@@ -4,7 +4,8 @@ import Layout from "@layouts/Layout.astro";
 import { SHOW_BUY_BUTTON } from "astro:env/server";
 import { getCollection, render } from "astro:content";
 import { formatDateUTC } from "@utils/formatDateUTC";
-import AmazonLogo from "@components/AmazonLogo.astro";
+import BookScore from "@components/BookScore.astro";
+import BuyButton from "@components/BuyButton.astro";
 
 export async function getStaticPaths() {
   const booksCollection = await getCollection("books");
@@ -27,6 +28,9 @@ const pubDateFormatted = formatDateUTC(pubDate);
 
 /* para renderizar el contenido de la colección, en este caso de los archivos markdown, podemos usar el método "render" de Astro */
 const { Content } = await render(book);
+
+/* aquí también se tiene la directiva para que siga siendo una página estática al hacer el build pero tendrá cierto contenido dinámico que se generará desde el lado del servidor con los -- server:defer -- */
+export const prerender = true;
 ---
 
 <Layout>
@@ -43,25 +47,16 @@ const { Content } = await render(book);
           alt={title}
         />
 
-        <!-- si no se le coloca un texto por default, en este caso algo como "Cargando puntuación..." y lo dejamos vacío, veremos que da un salto porque eso recién lo carga en el cliente pero para evitar eso, se podría usar algo de Astro que son las "islas de servidor" o las "server islands" que son componentes que se renderizan en el servidor y que cuando están listos recién los devuelve al cliente, pero ya devuelve lo que renderiza, no hace el fetching de datos en el cliente. Esto sería algo similar a los react server components pero ahora es mucho más simple y facil de comprender -->
-        <span class="text-sm text-gray-400 italic" id="score">
-          Cargando puntuación...
-        </span>
+        <!-- las "islas de servidor" o las "server islands" (https://docs.astro.build/en/guides/server-islands/) son componentes que se renderizan en el servidor y que cuando están listos recién los devuelve al cliente, pero ya devuelve lo que renderiza, no hace el fetching de datos en el cliente pero para poder utilizarlas hay que hacer ciertas configuraciones, como instalar y configurar un adapter de servidor, en este caso será con "npm install @astrojs/node" pero si se va a desplegar en Vercel, Netlify, etc., hay que instalar el adapter correspondiente (@astrojs/vercel, @astrojs/netlify, etc.) -->
+        <BookScore server:defer id={slug}>
+          <!-- este componente vendría a ser un "fallback" que sirve para mostrar un mensaje mientras se carga el componente que queremos, sería algo similar a un Suspense y lazy loading de React. Para que funcione correctamente, hay que asegurarse de que el componente tenga -- slot="fallback" -- en sus atributos -->
+          <span slot="fallback" class="text-sm text-gray-400 italic">
+            Cargando puntuación...
+          </span>
+        </BookScore>
 
-        {
-          SHOW_BUY_BUTTON && (
-            <a
-              href={buy.spain}
-              title="Comprar libro"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-balance inline-flex gap-2 items-center bg-yellow-400 hover:bg-yellow-500 active:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg border border-yellow-500 transition duration-200 ease-in-out hover:scale-105 justify-center text-center"
-            >
-              Comprar en Amazon España
-              <AmazonLogo />
-            </a>
-          )
-        }
+        <!-- NOTA: Cada isla se carga de forma independiente. Esto significa que una isla más lenta no retrasará la disponibilidad del resto de tu contenido personalizado -->
+        {SHOW_BUY_BUTTON && <BuyButton server:defer buy={buy} />}
       </aside>
 
       <main class="max-w-3xl flex flex-col gap-3">
@@ -72,17 +67,22 @@ const { Content } = await render(book);
 
         <div class="flex flex-col gap-0.5 border-b border-gray-700 pb-2 mb-2">
           <p class="text-sm text-gray-400 italic">
-            <strong>Author:</strong>
+            <strong>Autor:</strong>
             {author}
           </p>
 
           <p class="text-sm text-gray-400 italic">
-            <strong>Description:</strong>
+            <strong>Descripción:</strong>
             {description}
           </p>
 
           <p class="text-sm text-gray-400 italic">
-            <strong>Published Year:</strong>
+            <strong>Tiempo de lectura:</strong>
+            {readtime} minutos
+          </p>
+
+          <p class="text-sm text-gray-400 italic">
+            <strong>Publicado:</strong>
             {pubDateFormatted}
           </p>
         </div>
@@ -107,16 +107,4 @@ const { Content } = await render(book);
 <!-- <script is:inline></script> -->
 
 <!-- script normales donde por ejemplo se pueden importar dependencias, hacer fetching de datos, configuraciones adicionales de Astro, leer variables de entorno en el cliente, agregar interactividad con cierta funcionalidad a un elemento, etc -->
-<script>
-  import { SCORE_API_ENDPOINT } from "astro:env/client";
-
-  const scoreElement = document.getElementById("score");
-
-  fetch(SCORE_API_ENDPOINT)
-    .then((response) => response.text())
-    .then((scoreValue) => {
-      if (scoreElement) {
-        scoreElement.innerHTML = `Puntuación: ${scoreValue.trim()}/5 ⭐`;
-      }
-    });
-</script>
+<!-- <script></script> -->

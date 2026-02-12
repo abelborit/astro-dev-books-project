@@ -1,0 +1,11 @@
+---
+import { SCORE_API_ENDPOINT } from "astro:env/server";
+
+const response = await fetch(SCORE_API_ENDPOINT);
+const scoreValue = await response.text();
+---
+
+<!-- si colocáramos directamente de esta forma sin hacer ningún tipo de modificación o configuración adicional para usar los server islands, puede que funcione en una primera instancia o a simple vista porque normal se está haciendo la petición y funcionando bien, pero como sabemos que Astro es para contenido estático, si hacemos un build y nos vamos a algún index.html, por ejemplo en "dist/libro/aprendiendo-git/index.html" y buscamos el id de "score" nos daremos cuenta que la petición ya se hizo pero se quedó guardado ese valor de la petición de forma estática en el propio código, es decir, por ejemplo, podría aparecer directamente  -- Puntuación: 3/5 ⭐ -- cosa que no es lo correcto porque si queremos que vaya cambiando según las interacciones del usuarios y evitar hacer un build cada vez que sea necesario para reflejar el valor correcto, entonces nosotros queremos que sea dinámico, es decir, que todo el código o proyecto sea estático pero ciertas partes, como esta, sean de forma dinámica y para eso nos sirven los "server island" que es usar -- server:defer -- en el componente al colocarlo y hacer algunas configuraciones adicionales en el "astro.config.mjs" y también agregar ciertas configuraciones como -- export const prerender = true -- para que ciertas páginas sigan siendo estáticas y no renderizadas del lado del servidor e instalar algunos adaptadores para habilitar la carga bajo demanda según sea necesario -->
+<span class="text-sm text-gray-400 italic" id="score">
+  Puntuación: {scoreValue.trim()}/5 ⭐
+</span>
